@@ -1,0 +1,30 @@
+image: docker:stable
+
+variables:
+  HARBOR_REGISTRY: 'registry.docker.com/spa-react-init'
+  DOCKER_HOST: "tcp://localhost:2375"
+
+stages:
+  - build
+
+build:
+  stage: build
+  # 依赖的服务
+  services:
+    - docker:dind
+  tags:
+    - shared
+  environment:
+    name: $CI_COMMIT_REF_NAME
+  only:
+    - staging
+    - production
+  before_script:
+    - docker info
+    - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_REGISTRY
+  script:
+    - export VERSION=$CI_PIPELINE_ID
+    - export ENV=$CI_COMMIT_REF_NAME
+    - export BUILD_TAG=kubic-$ENV
+    - echo $BUILD_TAG:$VERSION
+    - 'cat ./package.json | sed -r "s/\"version\": \"+[0-9]+.[0-9]+.[0-9]+\"/\"version\": \"$CI_PIPELINE_ID\"/g" > pb.json'

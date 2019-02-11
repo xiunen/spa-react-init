@@ -1,0 +1,21 @@
+{
+  "presets": [
+    "es2015", [
+      "env", {
+        "modules": false
+      }
+    ],
+    "stage-2",
+    "react"
+  ],
+  "plugins": [
+    "syntax-dynamic-import"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "react-hot-loader/babel"
+      ]
+    }
+  }
+}
